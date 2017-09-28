@@ -19,6 +19,6 @@ Vagrant.configure(VAGRANT_VERSION) do |config|
     ansible.host_vars = {
         "default"=> {"ansible_python_interpreter" => "/usr/bin/python3"}
     }
-    ansible.playbook = "playbook.yml"
+    ansible.playbook = "site.yml"
   end
 end
