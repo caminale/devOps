@@ -3,16 +3,16 @@
   become: true
   user: root
   vars:
-    nom: "Camelot.sh"
     user: "camelot"
-
   tasks:
-
     - name: Ensure Zsh is installed
       apt: name=zsh state=installed
 
     - name: Ensure git is installed
       apt: name=git state=installed
+
+    - name: Ensure wget is installed
+      apt: name=wget state=installed
 
     - name: Create my user account
       user: name="{{ user }}" shell=/bin/zsh
@@ -33,5 +33,16 @@
       remote_user: "{{ user }}"
       sudo: false
 
+    - name: Make sure we have a 'camelot' group
+      group:
+        name: camelot
+        state: present
 
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%camelot'
+        line: '%camelot ALL=(ALL) NOPASSWD: ALL'
+        validate: visudo -cf %s
 
