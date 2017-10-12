@@ -4,7 +4,13 @@
   user: root
   vars:
     user: "camelot"
+
+
   tasks:
+    - name: update cache
+      apt:
+           update_cache: yes
+
     - name: Ensure Zsh is installed
       apt: name=zsh state=installed
 
@@ -22,16 +28,16 @@
                       key="{{ lookup('file', '~/.ssh/authorized_keys') }}"
 
 
-#    - name: Install oh-my-zsh
- #     git: repo=https://github.com/robbyrussell/oh-my-zsh.git
-  #         dest=~/.oh-my-zsh
-   #   remote_user: "{{ user }}"
-    #  sudo: false
+    - name: Install oh-my-zsh
+      git: repo=https://github.com/robbyrussell/oh-my-zsh.git
+           dest=~/.oh-my-zsh
+      remote_user: "{{ user }}"
+      sudo: false
 
-#    - name: Copy .zshrc template
- #     command: cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
-  #    remote_user: "{{ user }}"
-   #   sudo: false
+    - name: Copy .zshrc template
+      command: cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+      remote_user: "{{ user }}"
+      sudo: false
 
     - name: Make sure we have a 'camelot' group
       group:
@@ -46,3 +52,8 @@
         line: '%camelot ALL=(ALL) NOPASSWD: ALL'
         validate: visudo -cf %s
 
+  roles:
+      - role: mongrelion.docker
+        docker_config:
+          live-restore: true
+          userland-proxy: false
